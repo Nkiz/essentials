@@ -1,10 +1,10 @@
 #pragma once
 
+#include <engine/AlicaClock.h>
 #include <memory>
 #include <iostream>
 
 namespace supplementary {
-typedef long long InfoTime;
 
 /**
  * Information element stores one information and provides required meta
@@ -20,7 +20,7 @@ public:
      * @param validityDuration
      * @param certainty
      */
-    InformationElement(const T information, InfoTime creationTime, InfoTime validityDuration, double certainty)
+    InformationElement(const T information, alica::AlicaTime creationTime, alica::AlicaTime validityDuration, double certainty)
             : information(information)
             , creationTime(creationTime)
             , validityTime(creationTime + validityDuration)
@@ -37,7 +37,7 @@ public:
      * the sensor did record the data.
      * @return InfoTime time when this information was created
      */
-    InfoTime getCreationTime() const {
+    alica::AlicaTime getCreationTime() const {
         return this->creationTime;
     }
 
@@ -47,7 +47,7 @@ public:
      * the objects position probably has changed.
      * @return InfoTime time until this information is considered valid
      */
-    InfoTime getValidityTime() const {
+    alica::AlicaTime getValidityTime() const {
         return this->validityTime;
     }
 
@@ -65,7 +65,7 @@ public:
      * @return bool true if the validityTime is not over, false otherwise.
      */
     bool isValid() const {
-        return this->validityTime > 0;  // TODO: replace 0 with currentTime;
+        return this->validityTime > alica::AlicaTime::zero();  // TODO: replace 0 with currentTime;
     }
 
     /**
@@ -78,8 +78,8 @@ public:
 
 private:
     const T information;   /**< the stored information */
-    InfoTime creationTime; /**< time this information was created */
-    InfoTime validityTime; /**< the latest time this information is considered to be valid */
+    alica::AlicaTime creationTime; /**< time this information was created */
+    alica::AlicaTime validityTime; /**< the latest time this information is considered to be valid */
     double certainty;      /**< how certain the information was at the moment it was created */
 };
 

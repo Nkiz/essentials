@@ -140,7 +140,7 @@ public:
      * @param time to search for
      * @return a shared_ptr to the element if found, else nullptr (empty buffer)
      */
-    const std::shared_ptr<const InformationElement<T>> getTemporalCloseTo(const InfoTime time) const {
+    const std::shared_ptr<const InformationElement<T>> getTemporalCloseTo(const alica::AlicaTime time) const {
         std::lock_guard<std::mutex> guard(mtx_);
         if (this->index < 0 || this->bufferSize <= 0 || this->infoElementCounter <= 0) {
             return nullptr;
@@ -148,11 +148,11 @@ public:
 
         std::shared_ptr<const InformationElement<T>> closest = nullptr;
 
-        InfoTime timeDiffOfClosest = std::numeric_limits<long long>::max();
+        alica::AlicaTime timeDiffOfClosest = alica::AlicaTime::nanoseconds(std::numeric_limits<long long>::max());
         int numberOfAvailableElements = std::min(this->bufferSize, this->infoElementCounter);
         for (int i = 0; i < numberOfAvailableElements; i++) {
             int index = (this->index - i) % this->bufferSize;
-            InfoTime curTimeDiff = std::abs(time - this->ringBuffer[index]->getCreationTime());
+            alica::AlicaTime curTimeDiff = std::abs(time - this->ringBuffer[index]->getCreationTime());
             if (curTimeDiff < timeDiffOfClosest) {
                 closest = this->ringBuffer[index];
                 timeDiffOfClosest = curTimeDiff;
@@ -174,7 +174,7 @@ public:
      * @return a shared_ptr to the element if found, else nullptr
      */
     const std::shared_ptr<const InformationElement<T>> getTemporalCloseTo(
-            const InfoTime time, const InfoTime maxTimeDiff) const {
+            const alica::AlicaTime time, const alica::AlicaTime maxTimeDiff) const {
         auto closest = this->getTemporalCloseTo(time);
 
         if (!closest || std::abs(time - closest->getCreationTime()) > maxTimeDiff) {
