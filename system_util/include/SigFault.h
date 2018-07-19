@@ -13,7 +13,7 @@
 #include <string>
 #include <sys/syscall.h>
 #include <unistd.h>
-
+#include <ucontext.h>
 #include <cxxabi.h>
 #include <execinfo.h>
 
@@ -207,7 +207,7 @@ void handle_fpe()
 
 #define HANDLE_DIVIDE_OVERFLOW                                                                                                                                 \
     do {                                                                                                                                                       \
-        struct ucontext* _uc = (struct ucontext*)_p;                                                                                                           \
+        struct ucontext_t* _uc = (struct ucontext_t*)_p;                                                                                                           \
         volatile struct sigcontext* _sc = (struct sigcontext*)&_uc->uc_mcontext;                                                                               \
                                                                                                                                                                \
         register unsigned char* _rip = (unsigned char*)_sc->rip;                                                                                               \
